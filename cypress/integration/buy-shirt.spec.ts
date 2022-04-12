@@ -1,24 +1,37 @@
-describe('Buy a t-shirt', () => {
+import {
+  MenuContentPage, ProductsListPage,
+  ShopingCartPage, LoginPage,
+  AddressStepPage, ShippingStepPage,
+  PaymentStepPage,
+} from "../page/index";
 
-    it('then the t-shirt should be bought', () => {
-      cy.visit('http://automationpractice.com/')
-      cy.get('#block_top_menu > ul > li:nth-child(3) > a').click()
-      cy.get('#center_column a.button.ajax_add_to_cart_button.btn.btn-default').click()
-              
-      cy.get('[style*="display: block;"] .button-container > a').click()
-      cy.get('.cart_navigation span').click()
-  
-      cy.get('#email').type('aperdomobo@gmail.com')
-      cy.get('#passwd').type('WorkshopProtractor')
-      
-      cy.get('#login_form .submit span').click()
-      cy.get('.cart_navigation.clearfix span').click()
-      cy.get('.checkbox span').click()
-      cy.get('.cart_navigation.clearfix span').click()
-      cy.get('.bankwire').click()
-      cy.get('#center_column > form > p > button span').click()
-    
-      cy.get('#center_column > div > p > strong')
-        .should('have.text', 'Your order on My Store is complete.')
-    });
+const menuContentPage = new MenuContentPage();
+const productsListPage = new ProductsListPage();
+const shopingCartPage = new ShopingCartPage();
+const loginPage = new LoginPage();
+const addressStepPage = new AddressStepPage();
+const shippingStepPage = new ShippingStepPage();
+const paymentStepPage = new PaymentStepPage();
+
+describe("Buy a t-shirt", () => {
+  it("then should be bought a t-shirt", () => {
+    menuContentPage.visitMenuContentPage();
+    menuContentPage.goToTShirtMenu();
+
+    productsListPage.addTShirtToCart();
+
+    shopingCartPage.goToCheckoutInProduct();
+    shopingCartPage.goToCheckoutInPage();
+
+    loginPage.logIn();
+
+    addressStepPage.goToProceedToCheckout();
+
+    shippingStepPage.agreeTermsOfService();
+    shippingStepPage.goToCheckoutInPage();
+
+    paymentStepPage.selectBankWirePayMethod();
+    paymentStepPage.confirmPage();
+    paymentStepPage.checkTextOrderComplete();
   });
+});
